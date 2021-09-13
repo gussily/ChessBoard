@@ -34,7 +34,10 @@ export class ChessBoard {
 	}
 	
 	copy() {
-		return new ChessBoard(this.pieceList.map(x => x.copy()), this.selectedPiece, this.castled)
+		let player1 = players.PLAYER_1
+		let player2 = players.PLAYER_2
+		return new ChessBoard(this.pieceList.map(x => x.copy()), this.selectedPiece, 
+			{player1: this.castled.player1, player2: this.castled.player2})
 	}
 	
 	handleCastled(castled) {
