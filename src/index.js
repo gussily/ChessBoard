@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {ChessBoard, King, Knight, Pawn, Rook, Bishop, Queen, pieceRenders, players, ChessPiece, EmptyPiece} from './game-components';
+import {ChessBoard, King, Knight, Pawn, Rook, Bishop, Queen, pieceRenders, players, opponent, ChessPiece, EmptyPiece} from './game-components';
 
 
 
@@ -251,7 +251,7 @@ class Game extends React.Component {
 		
 		const history = this.state.history
 		const current = history[this.state.moveNumber]
-		const calcWinner = calculateWinner(current.squares.pieceList);
+		const calcWinner = calculateWinner(this.state.playerTurn, current.squares);
 		
 		const moves = history.map((step, move) => {
 			const desc = move ?
@@ -268,9 +268,13 @@ class Game extends React.Component {
 		
 		let status;
 		if(calcWinner) {
-			status = 'Winner: ' + calcWinner;
+			if (calcWinner == players.NONE) {
+				status = "Stalemate"
+			} else {
+				status = 'Winner: ' + calcWinner;
+			}
 		} else {
-			status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+			status = (this.state.playerTurn == players.PLAYER_1 ? 'White' : 'Black') + "'s turn";
 		}
 			
 		return (
@@ -306,10 +310,20 @@ class Game extends React.Component {
 					// />
 				// </div>
 
-function calculateWinner(squares) {
+function calculateWinner(playerTurn, squares) {
   
-  // TODO
-  return null;
+	let kingUnderAttack = squares.kingUnderAttack(playerTurn)
+	let canMove = squares.playerCanMove(playerTurn)
+	if ((! (canMove)) && kingUnderAttack) {
+		return opponent(playerTurn)
+	}
+	else if (!(canMove) ) {
+		return players.NONE
+	}
+	else {
+		return null
+	}
+	
 }
 
 // ========================================

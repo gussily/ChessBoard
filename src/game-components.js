@@ -48,6 +48,12 @@ export class ChessBoard {
 		}
 	}
 	
+	playerCanMove(player) {
+		let pieces = this.getPiecesFromPlayer(player)
+		pieces = pieces.filter(x => x.hasLegalMove(this))
+		return pieces.length > 0
+	}
+	
 	getPiecesFromPlayer(player) {
 		let pieces = this.pieceList.filter(x => x.player == player)
 		return pieces
